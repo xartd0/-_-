@@ -169,6 +169,28 @@ test/1.py
 test/2.py
 Архив создан: archive.tar
 ```
+# Задача 10
+## Код
+```bash
+#!/bin/bash
 
+# Проверка аргументов
+if [ "$#" -ne 1 ]; then
+    echo "Использование: $0 <директория>"
+    exit 1
+fi
+
+directory=$1
+
+# Поиск пустых текстовых файлов
+find "$directory" -type f -empty -print
+```
+```bash
+xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ./10.sh test
+test/3.js
+test/1.py
+test/1ff
+test/2.py
+```
 
 
