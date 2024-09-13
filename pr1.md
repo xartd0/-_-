@@ -53,7 +53,7 @@ uuidd
 whoopsie
 www-data
 xartd0
-'''
+```
 
 # Задача 2
 Вывести данные /etc/protocols в отформатированном и отсортированном порядке для 5 наибольших портов, как показано в примере ниже:
@@ -64,7 +64,7 @@ awk '{print $2, $1}' /etc/protocols | sort -nr | head -n 5
 142 rohc
 141 wesp
 140 shim6
-'''
+```
 
 # Задача 3
 Написать программу banner средствами bash для вывода текстов, как в следующем примере (размер баннера должен меняться!):
@@ -73,7 +73,7 @@ xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ./banner.sh "xartd0"
 +--------+
 | xartd0 |
 +--------+
-'''
+```
 
 # Задача 4
 Написать программу для вывода всех идентификаторов (по правилам C/C++ или Java) в файле (без повторений).
@@ -85,7 +85,7 @@ main
 n
 printf
 world
-'''
+```
 
 # Задача 5
 Написать программу для регистрации пользовательской команды (правильные права доступа и копирование в /usr/local/bin).
@@ -95,7 +95,7 @@ world
 xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ./reg.sh banner.sh
 xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ls /usr/local/bin
 banner.sh  ngrok
-'''
+```
 
 
 
