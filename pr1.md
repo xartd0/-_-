@@ -167,9 +167,6 @@ xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ./tar.sh "test" "py"
 tar: -: file name read contains nul character
 test/1.py
 test/2.py
-tar: The following options were used after non-option arguments.  These options are positional and affect only arguments that follow them.  Please, rearrange them properly.
-tar: --null has no effect
-tar: Exiting with failure status due to previous errors
 Архив создан: archive.tar
 ```
 
