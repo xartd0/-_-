@@ -140,5 +140,38 @@ xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ls /usr/local/bin
 banner.sh  ngrok
 ```
 
+# Задача 8
+## Код 
+```bash
+#!/bin/bash
+
+# Проверка аргументов
+if [ "$#" -ne 2 ]; then
+    echo "Использование: $0 <каталог> <расширение>"
+    exit 1
+fi
+
+directory=$1
+extension=$2
+archive_name="archive.tar"
+
+# Поиск файлов с указанным расширением и архивирование
+find "$directory" -type f -name "*.$extension" -print0 | tar -cvf "$archive_name" -T - --null
+
+echo "Архив создан: $archive_name"
+```
+
+Написать программу, которая находит все файлы в данном каталоге с расширением, указанным в качестве аргумента и архивирует все эти файлы в архив tar.
+```bash
+xartd0@xartd0-Strix-GL504GW-GL504GW:~/confmirea$ ./tar.sh "test" "py"
+tar: -: file name read contains nul character
+test/1.py
+test/2.py
+tar: The following options were used after non-option arguments.  These options are positional and affect only arguments that follow them.  Please, rearrange them properly.
+tar: --null has no effect
+tar: Exiting with failure status due to previous errors
+Архив создан: archive.tar
+```
+
 
 
