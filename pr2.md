@@ -66,3 +66,8 @@ published a week ago by wesleytodd <wes@wesleytodd.com>
 git clone https://github.com/expressjs/express.git
 cd express
 ```
+## Задача 3
+Сформировать graphviz-код и получить изображения зависимостей matplotlib и express.
+```bash
+
+```
