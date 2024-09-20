@@ -117,3 +117,6 @@ pip install git+https://github.com/matplotlib/matplotlib.git
 cd matplotlib
 python setup.py install
 ```
+
+## Задача 2
+Вывести служебную информацию о пакете express (JavaScript). Разобрать основные элементы содержимого файла со служебной информацией из пакета. Как получить пакет без менеджера пакетов, прямо из репозитория?
