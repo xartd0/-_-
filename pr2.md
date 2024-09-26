@@ -75,7 +75,30 @@ pipdeptree --packages matplotlib --graph-output dot > matplotlib_deps.dot
 
 ## Задача 4
 Решить на MiniZinc задачу о счастливых билетах. Добавить ограничение на то, что все цифры билета должны быть различными (подсказка: используйте all_different). Найти минимальное решение для суммы 3 цифр.
+```bash
+include "globals.mzn";  % Подключение библиотеки глобальных ограничений
+% Модель для задачи о счастливых билетах с уникальными цифрами
 
+% Билет состоит из 6 цифр от 0 до 9
+array[1..6] of var 0..9: digits;
+
+% Условие: все цифры билета должны быть различными
+constraint all_different(digits);
+
+% Условие счастливого билета: сумма первых трех цифр равна сумме последних трех
+constraint
+  digits[1] + digits[2] + digits[3] = digits[4] + digits[5] + digits[6];
+
+% Минимизируем сумму первых трех цифр
+var int: sum_digits = digits[1] + digits[2] + digits[3];
+solve minimize sum_digits;
+
+% Выводим решение
+output [
+  "Билет: \(show(digits[1]))\(show(digits[2]))\(show(digits[3]))\(show(digits[4]))\(show(digits[5]))\(show(digits[6]))\n",
+  "Сумма цифр: \(sum_digits)\n"
+];
+```
 
 
 
