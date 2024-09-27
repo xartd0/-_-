@@ -8,7 +8,6 @@ import shutil
 import xml.etree.ElementTree as ET
 import logging
 
-
 # Настройка логгера
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)  # Установите уровень логирования
@@ -37,7 +36,7 @@ class Emulator:
         temp_dir (str): Временная директория для распакованной виртуальной файловой системы.
         start_time (float): Время запуска эмулятора для расчета uptime.
     """
-    
+
     def __init__(self, config_path):
         """
         Инициализирует эмулятор, загружает конфигурацию и виртуальную файловую систему.
@@ -49,9 +48,7 @@ class Emulator:
         self.vfs_path = self.config['vfs_path']
         self.startup_script = self.config['startup_script']
 
-        self.current_dir = None
-        self.root_dir = None
-        self.temp_dir = None
+        self.current_dir = ''
         self.init_vfs()
 
         self.start_time = time.time()  # Время старта для расчета uptime
@@ -76,32 +73,28 @@ class Emulator:
 
     def init_vfs(self):
         """
-        Инициализирует виртуальную файловую систему: распаковывает ZIP-файл в временную директорию.
+        Инициализирует виртуальную файловую систему: открывает ZIP-файл.
         """
-        self.temp_dir = tempfile.mkdtemp()  # Создаем временную директорию
-        with zipfile.ZipFile(self.vfs_path, 'r') as zip_ref:
-            zip_ref.extractall(self.temp_dir)  # Распаковываем архив в temp_dir
-        self.root_dir = self.temp_dir
-        self.current_dir = self.root_dir
-        logger.debug('VFS initialized: root_dir=%s', self.root_dir)
+        self.zip_ref = zipfile.ZipFile(self.vfs_path, 'r')
+        logger.debug('VFS initialized: vfs_path=%s', self.vfs_path)
 
     def run_startup_script(self):
         """
         Выполняет команды, указанные в стартовом скрипте, при запуске эмулятора.
         """
         script_path = os.path.join(self.current_dir, self.startup_script)
-        if os.path.exists(script_path):
-            with open(script_path, 'r') as script_file:
+        if script_path in self.zip_ref.namelist():
+            with self.zip_ref.open(script_path) as script_file:
                 commands = script_file.readlines()
                 for command in commands:
-                    self.run_command(command.strip())
+                    self.run_command(command.strip().decode('utf-8'))
 
     def cleanup(self):
         """
         Очищает временную директорию после завершения работы эмулятора.
         """
         logger.debug('Cleaning up...')
-        shutil.rmtree(self.temp_dir)
+        self.zip_ref.close()
 
     def run_command(self, command, output_widget=None):
         """
@@ -120,7 +113,7 @@ class Emulator:
 
         if output_widget:
             # Вывод текущей директории перед командой, как в реальном терминале
-            output_widget.insert(tk.END, f"{self.current_dir}$ {command}\n")
+            output_widget.insert(tk.END, f"{self.whoami()}$ {command}\n")
 
         # Выполнение команды
         if cmd == 'ls':
@@ -129,7 +122,7 @@ class Emulator:
             if args:
                 result = self.cd(args[0])
             else:
-                result = "cd: missing operand"
+                result = "cd: missing path"
         elif cmd == 'exit':
             result = self.exit()
         elif cmd == 'date':
@@ -145,7 +138,7 @@ class Emulator:
         if output_widget:
             output_widget.insert(tk.END, result + "\n")
             output_widget.see(tk.END)  # Автопрокрутка вниз
-        
+
         logger.debug('Command executed: %s', command)
 
     def ls(self):
@@ -156,7 +149,19 @@ class Emulator:
             str: Список файлов и директорий.
         """
         logger.debug('Listing files in current directory: %s', self.current_dir)
-        return "\n".join(os.listdir(self.current_dir))
+        files = [f for f in self.zip_ref.namelist() if f.startswith(self.current_dir)]
+        current_dir_files = set()
+
+        for f in files:
+            relative_path = f.replace(self.current_dir, '', 1).lstrip('/')
+            if '/' not in relative_path:
+                current_dir_files.add(relative_path)
+            else:
+                dir_name = relative_path.split('/')[0]
+                current_dir_files.add(dir_name)
+
+        return "\n".join(sorted(current_dir_files))
+
 
     def cd(self, path):
         """
@@ -169,12 +174,24 @@ class Emulator:
             str: Сообщение о результате операции.
         """
         logger.debug('Changing directory: %s', path)
-        new_path = os.path.join(self.current_dir, path)
-        if os.path.exists(new_path) and os.path.isdir(new_path):
-            self.current_dir = new_path
+
+        if path == '..':
+            if self.current_dir:
+                self.current_dir = os.path.normpath(os.path.join(self.current_dir, '..'))
+                if self.current_dir == '.':
+                    self.current_dir = ''
             return f"Changed directory to {self.current_dir}"
         else:
-            return f"cd: {path}: No such file or directory"
+            new_path = os.path.join(self.current_dir, path)
+            if not new_path.endswith('/'):
+                new_path += '/'
+
+            if any(name.startswith(new_path) for name in self.zip_ref.namelist()):
+                self.current_dir = new_path
+                return f"Changed directory to {self.current_dir}"
+            else:
+                return f"cd: {path}: No such file or directory"
+
 
     def exit(self):
         """
