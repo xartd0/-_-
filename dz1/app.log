@@ -1,0 +1,44 @@
+2024-09-27 12:50:14,309 - __main__ - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:50:14,311 - __main__ - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmpy59byy76
+2024-09-27 12:50:14,319 - __main__ - DEBUG - Emulator started
+2024-09-27 12:50:14,319 - __main__ - DEBUG - Initializing GUI...
+2024-09-27 12:50:14,362 - __main__ - DEBUG - Starting GUI main loop...
+2024-09-27 12:50:17,910 - __main__ - DEBUG - Executing command: ды
+2024-09-27 12:50:17,915 - __main__ - DEBUG - Command executed: ды
+2024-09-27 12:50:18,723 - __main__ - DEBUG - Executing command: ls
+2024-09-27 12:50:18,723 - __main__ - DEBUG - Listing files in current directory: C:\Users\lordp\AppData\Local\Temp\tmpy59byy76
+2024-09-27 12:50:18,731 - __main__ - DEBUG - Command executed: ls
+2024-09-27 12:50:22,663 - __main__ - DEBUG - Executing command: exit
+2024-09-27 12:50:22,663 - __main__ - DEBUG - Exiting emulator...
+2024-09-27 12:50:22,663 - __main__ - DEBUG - Cleaning up...
+2024-09-27 12:52:26,576 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:26,586 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmp_9_dq8z8
+2024-09-27 12:52:26,586 - core - DEBUG - Emulator started
+2024-09-27 12:52:26,586 - core - DEBUG - Changing directory: folder1
+2024-09-27 12:52:26,586 - core - DEBUG - Command executed: cd folder1
+2024-09-27 12:52:26,586 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:26,590 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmprvuq425z
+2024-09-27 12:52:26,590 - core - DEBUG - Emulator started
+2024-09-27 12:52:26,590 - core - DEBUG - Getting current date and time...
+2024-09-27 12:52:26,590 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:26,596 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmpzvfei183
+2024-09-27 12:52:26,596 - core - DEBUG - Emulator started
+2024-09-27 12:52:26,596 - core - DEBUG - Listing files in current directory: C:\Users\lordp\AppData\Local\Temp\tmpzvfei183
+2024-09-27 12:52:26,596 - core - DEBUG - Command executed: ls
+2024-09-27 12:52:26,596 - core - DEBUG - Listing files in current directory: C:\Users\lordp\AppData\Local\Temp\tmpzvfei183
+2024-09-27 12:52:26,596 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:26,596 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmpyi92j6ns
+2024-09-27 12:52:26,596 - core - DEBUG - Emulator started
+2024-09-27 12:52:27,601 - core - DEBUG - Getting uptime...
+2024-09-27 12:52:27,601 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:27,609 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmpj37qwhuf
+2024-09-27 12:52:27,609 - core - DEBUG - Emulator started
+2024-09-27 12:52:27,609 - core - DEBUG - Getting current user...
+2024-09-27 12:52:27,612 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:27,612 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmpefhq95vu
+2024-09-27 12:52:27,612 - core - DEBUG - Emulator started
+2024-09-27 12:52:28,617 - core - DEBUG - Getting uptime...
+2024-09-27 12:52:28,617 - core - DEBUG - Config read: vfs_path=virtual_fs.zip, startup_script=startup_script.sh
+2024-09-27 12:52:28,635 - core - DEBUG - VFS initialized: root_dir=C:\Users\lordp\AppData\Local\Temp\tmp4j8m1tel
+2024-09-27 12:52:28,635 - core - DEBUG - Emulator started
+2024-09-27 12:52:28,635 - core - DEBUG - Getting current user...

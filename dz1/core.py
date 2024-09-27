@@ -6,7 +6,23 @@ from tkinter import scrolledtext
 import tempfile
 import shutil
 import xml.etree.ElementTree as ET
+import logging
 
+
+# Настройка логгера
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)  # Установите уровень логирования
+
+# Создание обработчика для записи логов в файл
+file_handler = logging.FileHandler('app.log')
+file_handler.setLevel(logging.DEBUG)  # Установите уровень логирования для обработчика
+
+# Создание форматера для логов
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# Добавление обработчика к логгеру
+logger.addHandler(file_handler)
 
 class Emulator:
     """
@@ -39,6 +55,7 @@ class Emulator:
         self.init_vfs()
 
         self.start_time = time.time()  # Время старта для расчета uptime
+        logger.debug('Emulator started')
 
     def read_config(self, config_path):
         """
@@ -54,6 +71,7 @@ class Emulator:
         root = tree.getroot()
         vfs_path = root.find('vfs_path').text
         startup_script = root.find('startup_script').text
+        logger.debug('Config read: vfs_path=%s, startup_script=%s', vfs_path, startup_script)
         return {'vfs_path': vfs_path, 'startup_script': startup_script}
 
     def init_vfs(self):
@@ -65,6 +83,7 @@ class Emulator:
             zip_ref.extractall(self.temp_dir)  # Распаковываем архив в temp_dir
         self.root_dir = self.temp_dir
         self.current_dir = self.root_dir
+        logger.debug('VFS initialized: root_dir=%s', self.root_dir)
 
     def run_startup_script(self):
         """
@@ -81,6 +100,7 @@ class Emulator:
         """
         Очищает временную директорию после завершения работы эмулятора.
         """
+        logger.debug('Cleaning up...')
         shutil.rmtree(self.temp_dir)
 
     def run_command(self, command, output_widget=None):
@@ -125,6 +145,8 @@ class Emulator:
         if output_widget:
             output_widget.insert(tk.END, result + "\n")
             output_widget.see(tk.END)  # Автопрокрутка вниз
+        
+        logger.debug('Command executed: %s', command)
 
     def ls(self):
         """
@@ -133,6 +155,7 @@ class Emulator:
         Возвращает:
             str: Список файлов и директорий.
         """
+        logger.debug('Listing files in current directory: %s', self.current_dir)
         return "\n".join(os.listdir(self.current_dir))
 
     def cd(self, path):
@@ -145,6 +168,7 @@ class Emulator:
         Возвращает:
             str: Сообщение о результате операции.
         """
+        logger.debug('Changing directory: %s', path)
         new_path = os.path.join(self.current_dir, path)
         if os.path.exists(new_path) and os.path.isdir(new_path):
             self.current_dir = new_path
@@ -159,7 +183,9 @@ class Emulator:
         Возвращает:
             str: Сообщение о завершении работы.
         """
+        logger.debug('Exiting emulator...')
         self.cleanup()
+        exit()
         return "Exiting emulator..."
 
     def date(self):
@@ -169,6 +195,7 @@ class Emulator:
         Возвращает:
             str: Текущая дата и время.
         """
+        logger.debug('Getting current date and time...')
         import datetime
         return str(datetime.datetime.now())
 
@@ -179,6 +206,7 @@ class Emulator:
         Возвращает:
             str: Имя пользователя.
         """
+        logger.debug('Getting current user...')
         return os.getlogin()
 
     def uptime(self):
@@ -188,6 +216,7 @@ class Emulator:
         Возвращает:
             str: Время работы эмулятора в секундах.
         """
+        logger.debug('Getting uptime...')
         uptime_seconds = time.time() - self.start_time
         return f"Uptime: {uptime_seconds:.2f} seconds"
 
@@ -210,6 +239,7 @@ class ShellGUI:
         Параметры:
             emulator (Emulator): Объект эмулятора, управляющий командной оболочкой.
         """
+        logger.debug('Initializing GUI...')
         self.emulator = emulator
         self.root = tk.Tk()
         self.root.title("Shell Emulator")
@@ -233,6 +263,7 @@ class ShellGUI:
         Параметры:
             event (tk.Event): Событие нажатия клавиши <Return>.
         """
+        logger.debug('Executing command: %s', self.entry.get())
         command = self.entry.get()
         self.emulator.run_command(command, output_widget=self.output)
         self.entry.delete(0, tk.END)
@@ -241,6 +272,7 @@ class ShellGUI:
         """
         Запуск главного цикла GUI.
         """
+        logger.debug('Starting GUI main loop...')
         self.root.mainloop()
 
 
