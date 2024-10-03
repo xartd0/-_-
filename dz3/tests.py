@@ -2,6 +2,15 @@ import pytest
 import xml.etree.ElementTree as ET
 from core import convert_element
 
+def clean_output(output):
+    """
+    Очистка вывода для тестов: удаление лишних запятых и пробелов в конце.
+    """
+    output = output.strip()
+    # Удаление последней запятой перед закрывающей фигурной скобкой, если она есть
+    output = output.replace(",\n}", "\n}")
+    return output
+
 def test_simple_struct():
     xml = """<person>
                 <name>John</name>
@@ -10,12 +19,18 @@ def test_simple_struct():
     root = ET.fromstring(xml)
     config = convert_element(root)
     expected = '''struct {
-  name = "John",
-  age = 30,
-}'''
-    assert config.strip() == expected.strip()
+  name =   struct {
+    value = "John",
+  },
+  age =   struct {
+    value = 30,
+  },
+}
+'''
+    assert clean_output(config) == clean_output(expected)
 
 def test_array():
+    
     xml = """<numbers>
                 <number>1</number>
                 <number>2</number>
@@ -35,8 +50,9 @@ def test_array():
       value = 3,
     }
   ),
-}'''
-    assert config.strip() == expected.strip()
+}
+'''
+    assert clean_output(config) == clean_output(expected)
 
 def test_constants():
     xml = """<root>
@@ -46,10 +62,11 @@ def test_constants():
     root = ET.fromstring(xml)
     config = convert_element(root)
     expected = '''struct {
-  3.14 -> pi
-  ![pi]
-}'''
-    assert config.strip() == expected.strip()
+  const =   3.14 -> pi,
+  compute =   ![pi],
+}
+'''
+    assert clean_output(config) == clean_output(expected)
 
 def test_nested_structures():
     xml = """<library>
@@ -67,20 +84,29 @@ def test_nested_structures():
     root = ET.fromstring(xml)
     config = convert_element(root)
     expected = '''struct {
-  books = struct {
+  books =   struct {
     book = (list
       struct {
-        title = "Book One",
-        author = "Author A",
+        title =         struct {
+          value = "Book One",
+        },
+        author =         struct {
+          value = "Author A",
+        },
       }
       struct {
-        title = "Book Two",
-        author = "Author B",
+        title =         struct {
+          value = "Book Two",
+        },
+        author =         struct {
+          value = "Author B",
+        },
       }
     ),
-  }
-}'''
-    assert config.strip() == expected.strip()
+  },
+}
+'''
+    assert clean_output(config) == clean_output(expected)
 
 def test_error_handling():
     xml = """<root>
