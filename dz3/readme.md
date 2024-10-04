@@ -72,16 +72,16 @@ struct {
     route = (list
       struct {
         path = "/home",
-        handler = "homeHandler",
+        handler = "homeHandler"
       }
       struct {
         path = "/login",
-        handler = "loginHandler",
+        handler = "loginHandler"
       }
-    ),
-  }
-  100 -> maxconnections
-  ![maxconnections]
+    )
+  },
+  const = 100 -> max_connections,
+  compute = ![max_connections]
 }
 ```
 
