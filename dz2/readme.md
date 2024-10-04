@@ -1,5 +1,5 @@
 
-# Git Commit Dependency Graph VisualizerывС
+# Git Commit Dependency Graph Visualizer
 
 ## Описание
 

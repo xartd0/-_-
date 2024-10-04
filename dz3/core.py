@@ -16,76 +16,25 @@ import sys
 import re
 import xml.etree.ElementTree as ET
 
-def sanitize_name(name):
-    """
-    Sanitizes a name to match the [a-z]+ pattern required by the configuration language.
-
-    Parameters:
-        name (str): The original name.
-
-    Returns:
-        str: The sanitized name containing only lowercase letters.
-    """
-    name = name.lower()
-    name = re.sub('[^a-z]', '', name)
-    if not name:
-        name = 'unnamed'
-    return name
-
-def is_number(s):
-    """
-    Checks if a string represents a number.
-
-    Parameters:
-        s (str): The string to check.
-
-    Returns:
-        bool: True if the string is a number, False otherwise.
-    """
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-
-def convert_value(value):
-    """
-    Converts a value to its configuration language representation.
-
-    Parameters:
-        value (str): The value to convert.
-
-    Returns:
-        str: The value in the configuration language format.
-    """
-    value = value.strip()
-    if is_number(value):
-        return value
-    else:
-        return f"\"{value}\""
-
 def convert_element(element, indent=0, constants=None):
     """
-    Recursively converts an XML element into the configuration language representation.
+    Рекурсивно преобразует XML-элемент в представление на языке конфигурации.
 
-    Parameters:
-        element (xml.etree.ElementTree.Element): The XML element to convert.
-        indent (int): The current indentation level.
-        constants (dict): A dictionary to store constants.
+    Параметры:
+        element (xml.etree.ElementTree.Element): Элемент XML для преобразования.
+        indent (int): Текущий уровень отступа.
+        constants (dict): Словарь для хранения констант.
 
-    Returns:
-        str: The configuration language representation of the element.
-
-    Raises:
-        ValueError: If there is a syntax error in the XML structure.
+    Возвращает:
+        str: Представление элемента в языке конфигурации.
     """
     if constants is None:
         constants = {}
 
-    indent_str = '  ' * indent
+    indent_str = '  ' * indent  # Отступ на текущем уровне
     items = []
 
-    # Handle constant declaration
+    # Обработка объявления констант
     if element.tag == 'const':
         name = element.get('name')
         value = element.get('value')
@@ -95,8 +44,9 @@ def convert_element(element, indent=0, constants=None):
             result = f"{indent_str}{convert_value(value)} -> {sanitized_name}"
             return result
         else:
-            raise ValueError(f"Const element must have 'name' and 'value' attributes.")
-    # Handle constant computation
+            raise ValueError(f"Const element должен иметь атрибуты 'name' и 'value'.")
+
+    # Обработка вычисления констант
     elif element.tag == 'compute':
         name = element.get('name')
         if name:
@@ -105,23 +55,24 @@ def convert_element(element, indent=0, constants=None):
                 result = f"{indent_str}![{sanitized_name}]"
                 return result
             else:
-                raise ValueError(f"Constant '{sanitized_name}' not found.")
+                raise ValueError(f"Константа '{sanitized_name}' не найдена.")
         else:
-            raise ValueError(f"Compute element must have 'name' attribute.")
+            raise ValueError(f"Элемент 'compute' должен иметь атрибут 'name'.")
+
     else:
-        # Start struct
+        # Открывающая скобка структуры с правильным отступом
         result = indent_str + "struct {\n"
 
-        # Process attributes
+        # Обработка атрибутов элемента
         for attr_name, attr_value in element.attrib.items():
             name = sanitize_name(attr_name)
             value = convert_value(attr_value)
             items.append(f"{indent_str}  {name} = {value},")
 
-        # Process child elements
+        # Обработка дочерних элементов
         children = list(element)
         if children:
-            # Group children by tag name
+            # Группировка дочерних элементов по тегам
             child_groups = {}
             for child in children:
                 tag = sanitize_name(child.tag)
@@ -131,28 +82,95 @@ def convert_element(element, indent=0, constants=None):
 
             for tag, group in child_groups.items():
                 if len(group) == 1:
-                    # Single child element
-                    value = convert_element(group[0], indent+1, constants)
+                    # Обработка одного дочернего элемента
+                    value = convert_element(group[0], indent + 1, constants)
                     items.append(f"{indent_str}  {tag} = {value},")
                 else:
-                    # Multiple child elements with the same tag (array)
+                    # Обработка списка (несколько элементов с одинаковыми тегами)
                     list_items = []
                     for elem in group:
-                        item = convert_element(elem, indent+2, constants)
+                        item = convert_element(elem, indent + 2, constants)
                         list_items.append(item)
-                    list_str = f"(list\n" + '\n'.join(list_items) + f"\n{indent_str}  )"
+                    # Формирование списка
+                    list_str = "(list\n" + '\n'.join(list_items) + f"\n{indent_str}  )"
                     items.append(f"{indent_str}  {tag} = {list_str},")
         else:
-            # No child elements, process text content
+            # Обработка текста в элементе
             text = element.text.strip() if element.text else ''
             if text:
                 value = convert_value(text)
-                items.append(f"{indent_str}  value = {value},")
+                return value  # Если это просто текст, возвращаем его напрямую
 
-        result += '\n'.join(items)
-        result += f"\n{indent_str}}}"
+        result += '\n'.join(items).rstrip(',')  # Убираем лишние запятые
+        result += f"\n{indent_str}}}"  # Закрывающая скобка на уровне структуры
         return result
 
+
+def sanitize_name(name):
+    """
+    Санирует имя для использования в конфигурации.
+
+    Параметры:
+        name (str): Исходное имя.
+
+    Возвращает:
+        str: Очищенное имя, содержащее только строчные буквы.
+    """
+    return re.sub(r'[^a-zA-Z0-9]', '_', name.lower())
+
+def convert_value(value):
+    """
+    Преобразует значение в конфигурацию.
+
+    Параметры:
+        value (str): Значение для преобразования.
+
+    Возвращает:
+        str: Преобразованное значение.
+    """
+    value = value.strip()
+    if is_number(value):
+        return value
+    else:
+        return f'"{value}"'
+    
+
+def post_process_config(config_str):
+    """
+    Постобработка строки конфигурации для удаления лишних пробелов перед `struct`
+    и после знака "=" в выражениях.
+
+    Параметры:
+        config_str (str): Строка конфигурации.
+
+    Возвращает:
+        str: Обработанная строка.
+    """
+    # Убираем лишние пробелы перед struct, если перед ней стоит знак =
+    config_str = re.sub(r'=\s+struct', '= struct', config_str)
+
+    # Убираем лишние пробелы после знака = (делаем один пробел)
+    config_str = re.sub(r'=\s+', '= ', config_str)
+
+    return config_str
+
+
+def is_number(s):
+    """
+    Проверяет, является ли строка числом.
+
+    Параметры:
+        s (str): Строка для проверки.
+
+    Возвращает:
+        bool: True, если строка — это число, иначе False.
+    """
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+    
 def main():
     """
     Main function that parses command-line arguments and initiates the conversion process.
@@ -172,8 +190,13 @@ def main():
         sys.exit(1)
 
     try:
-        config = convert_element(root)
-        print(config)
+        config_str = convert_element(root)
+
+        # Выполняем постобработку
+        processed_config_str = post_process_config(config_str)
+
+        # Выводим результат
+        print(processed_config_str)
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
