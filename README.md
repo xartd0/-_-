@@ -10,4 +10,4 @@
 1. [Home work 1](/dz1/)
 2. [Home work 2](/dz2/)
 3. [Home work 3](/dz3/)
-4. [Home work 4](/dz4/)
+4. [Home work 6](/dz6/)
