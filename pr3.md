@@ -91,6 +91,8 @@ in  { groups =
     , subject = "Конфигурационное управление"
  }
 ```
+<img width="1212" alt="Снимок экрана 2024-11-01 в 13 17 37" src="https://github.com/user-attachments/assets/7aa740ce-2795-46a5-b0e4-ec01fa2b7abf">
+
 
 ### Задача 3
 Язык нулей и единиц.
