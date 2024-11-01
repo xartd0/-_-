@@ -5,7 +5,7 @@
 2. [Practical task 2](/pr2.md)
 3. [Practical task 3](/pr3.md)
 4. [Practical task 4](/pr4.md)
-5. [Practical task 4](/pr6.md)
+5. [Practical task 6](/pr6.md)
 
 ## Home work
 1. [Home work 1](/dz1/)
