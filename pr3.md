@@ -111,6 +111,8 @@ E = 10 | 100 | 11 | 101101 | 000
 for i in range(10):
     print(generate_phrase(parse_bnf(BNF), 'E'))
 ```
+<img width="809" alt="Снимок экрана 2024-11-01 в 13 19 19" src="https://github.com/user-attachments/assets/6dc31a12-376f-4955-bae7-31cff57fce52">
+
 
 ### Задача 4
 Язык правильно расставленных скобок двух видов.
@@ -129,6 +131,7 @@ E = "()" | "{}" | E E | "(" E ")" | "{" E "}"
 for i in range(10):
     print(generate_phrase(parse_bnf(BNF), 'E'))
 ```
+<img width="929" alt="Снимок экрана 2024-11-01 в 13 20 53" src="https://github.com/user-attachments/assets/cd9784d9-ead0-42d1-b3a2-cd2ec8159d13">
 
 Задача 5
 Язык выражений алгебры логики.
@@ -140,3 +143,5 @@ E = "~" E | E "&" E | E "|" E | "(" E ")" | "x" | "y"
 for i in range(10):
     print(generate_phrase(parse_bnf(BNF), 'E'))
 ```
+<img width="914" alt="Снимок экрана 2024-11-01 в 13 21 19" src="https://github.com/user-attachments/assets/88d43789-6780-43a6-93c7-f6110fbcda52">
+
