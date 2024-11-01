@@ -1,0 +1,131 @@
+- args:
+  - 1
+  - 100
+  binary: 4f010064000000
+  command: LOAD_CONST
+- args:
+  - 2
+  - 247
+  binary: 4f0200f7000000
+  command: LOAD_CONST
+- args:
+  - 3
+  - 200
+  binary: 4f0300c8000000
+  command: LOAD_CONST
+- args:
+  - 10
+  - 250
+  binary: 4f0a00fa000000
+  command: LOAD_CONST
+- args:
+  - 0
+  - 1
+  - 10
+  binary: 4a0000010a
+  command: WRITE_MEM
+- args:
+  - 10
+  - 247
+  binary: 4f0a00f7000000
+  command: LOAD_CONST
+- args:
+  - 1
+  - 1
+  - 10
+  binary: 4a0100010a
+  command: WRITE_MEM
+- args:
+  - 10
+  - 123
+  binary: 4f0a007b000000
+  command: LOAD_CONST
+- args:
+  - 2
+  - 1
+  - 10
+  binary: 4a0200010a
+  command: WRITE_MEM
+- args:
+  - 10
+  - 247
+  binary: 4f0a00f7000000
+  command: LOAD_CONST
+- args:
+  - 3
+  - 1
+  - 10
+  binary: 4a0300010a
+  command: WRITE_MEM
+- args:
+  - 0
+  - 1
+  - 4
+  binary: dc00000104
+  command: READ_MEM
+- args:
+  - 5
+  - 4
+  - 2
+  binary: '83050402'
+  command: EQUAL
+- args:
+  - 0
+  - 3
+  - 5
+  binary: 4a00000305
+  command: WRITE_MEM
+- args:
+  - 1
+  - 1
+  - 4
+  binary: dc01000104
+  command: READ_MEM
+- args:
+  - 5
+  - 4
+  - 2
+  binary: '83050402'
+  command: EQUAL
+- args:
+  - 1
+  - 3
+  - 5
+  binary: 4a01000305
+  command: WRITE_MEM
+- args:
+  - 2
+  - 1
+  - 4
+  binary: dc02000104
+  command: READ_MEM
+- args:
+  - 5
+  - 4
+  - 2
+  binary: '83050402'
+  command: EQUAL
+- args:
+  - 2
+  - 3
+  - 5
+  binary: 4a02000305
+  command: WRITE_MEM
+- args:
+  - 3
+  - 1
+  - 4
+  binary: dc03000104
+  command: READ_MEM
+- args:
+  - 5
+  - 4
+  - 2
+  binary: '83050402'
+  command: EQUAL
+- args:
+  - 3
+  - 3
+  - 5
+  binary: 4a03000305
+  command: WRITE_MEM
