@@ -56,6 +56,62 @@ Date:   Thu Oct 31 23:13:54 2024 +0300
 
 ### Задача 4
 Написать программу на Питоне (или другом ЯП), которая выводит список содержимого всех объектов репозитория. Воспользоваться командой "git cat-file -p". Идеальное решение – не использовать иных сторонних команд и библиотек для работы с git.
+```bash
+import os
+import subprocess
+
+def find_git_root(path):
+    """Finds the root of the git repository containing the given path."""
+    while path != os.path.dirname(path):
+        if os.path.isdir(os.path.join(path, '.git')):
+            return path
+        path = os.path.dirname(path)
+    return None
+
+def main():
+    # Find git root
+    current_dir = os.getcwd()
+    git_root = find_git_root(current_dir)
+    if git_root is None:
+        print('Not inside a git repository')
+        return
+
+    git_objects_dir = os.path.join(git_root, '.git', 'objects')
+
+    # List to store object IDs
+    object_ids = []
+
+    # Walk through the .git/objects directory
+    for root, dirs, files in os.walk(git_objects_dir):
+        # Skip 'info' and 'pack' directories
+        dirs[:] = [d for d in dirs if d not in ('info', 'pack')]
+
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            for filename in os.listdir(dir_path):
+                # Construct object ID
+                object_id = dir_name + filename
+                object_ids.append(object_id)
+
+    # Remove duplicates (in case)
+    object_ids = list(set(object_ids))
+
+    # For each object ID, run "git cat-file -p <object_id>"
+    for object_id in object_ids:
+        try:
+            output = subprocess.check_output(['git', 'cat-file', '-p', object_id], stderr=subprocess.STDOUT, cwd=git_root)
+            print('Object ID:', object_id)
+            print(output.decode('utf-8', errors='replace'))
+            print('-' * 40)
+        except subprocess.CalledProcessError as e:
+            print('Error processing object ID:', object_id)
+            print(e.output.decode('utf-8', errors='replace'))
+            print('-' * 40)
+
+if __name__ == '__main__':
+    main()
+```
+
 
 ```bash
 Object ID: d1543adb5c79f21099b7d72971def24a03c3f2ea
