@@ -54,6 +54,76 @@ Date:   Thu Oct 31 23:13:54 2024 +0300
     new: добавлен файл prog.py
 ```
 
+### Задача 3
+```bash
+# Инициализация первого репозитория и настройка
+git init
+git config user.name "coder1"
+git config user.email "coder1@example.com"
+echo 'print("Hello, World!")' > prog.py
+git add prog.py
+git commit -m "first commit"
+
+# Создание bare-репозитория
+mkdir -p repository
+cd repository
+git init --bare server
+
+# Возвращение в основной репозиторий, подключение к серверу и пуш
+cd ..
+git remote add server repository/server
+git remote -v
+git push server master
+
+# Клонирование серверного репозитория в клиентский
+git clone repository/server repository/client
+cd repository/client
+git config user.name "coder2"
+git config user.email "coder2@example.com"
+
+# Добавление нового файла и коммит
+echo "Author Information:" > readme.md
+git add readme.md
+git commit -m "docs"
+
+# Переименование удаленного репозитория и пуш
+git remote rename origin server
+git push server master
+
+# Возвращение в основной репозиторий, чтобы сделать pull
+cd ..
+git pull server master --no-rebase  # Используем merge вместо rebase
+
+# Внесение изменений от coder1 и пуш
+echo "Author: coder1" >> readme.md
+git add readme.md
+git commit -m "coder1 info"
+git push server master
+
+# Переход в клиентский репозиторий и внесение изменений от coder2
+cd client
+echo "Author: coder2" >> readme.md
+git add readme.md
+git commit -m "coder2 info"
+
+# Перед `push` выполняем `pull` с merge, чтобы избежать линейной истории
+git pull server master --no-rebase
+git push server master
+
+# Получение последних изменений с сервера
+git pull server master --no-rebase
+
+# Последний коммит и пуш исправлений в readme
+git add readme.md
+git commit -m "readme fix"
+git push server master
+
+# Переход к bare-репозиторию и просмотр истории
+cd ..
+cd server
+git log -n 5 --graph --decorate --all
+```
+
 ### Задача 4
 Написать программу на Питоне (или другом ЯП), которая выводит список содержимого всех объектов репозитория. Воспользоваться командой "git cat-file -p". Идеальное решение – не использовать иных сторонних команд и библиотек для работы с git.
 ```bash
